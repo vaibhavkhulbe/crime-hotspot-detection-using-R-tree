@@ -1,0 +1,219 @@
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<bits/stdc++.h>
+#include<set>
+using namespace std;
+int main()
+{
+	ofstream myfile ("OUTPUTRING.txt");
+	ifstream myfile1 ("ring.txt");
+  long long int n=0,k=0,i,t=0,j,m,b[55000],x,y,a[50000],flag[50000],flag1[55000],f1=0,hspt[50000],kl=0,len=0,kp;
+	double mx1,mx2,mn1,mn2,x1,y1,x2,y2,x3,y3,dis;
+  double c,d,z=0.04,s,s1,z1,B,f,max=0,mx,z2=0.01,z4;
+  vector<pair<double,pair<double,double > > > v1,v3;
+	vector<pair<double,pair<double,pair<double,double > > > > v5,v7;
+  double LR[50000],LR2[55000];		
+  vector< pair<double,double > > v,v2,v6,v4;
+  while(len<15000)
+     {
+        myfile1>>c>>d;
+        v.push_back(std::make_pair(c,d));
+        len++;
+     }
+  for(i=0;i<len;i++)
+    flag[i]=-1;
+  for(i=0;i<ceil(len*1.01);i++)
+    flag1[i]=-1;
+  for(i=0;i<len;i++)
+    a[i]=0;
+  for(i=0;i<ceil(len*1.01);i++)
+    b[i]=0;
+    sort(v.begin(),v.end());
+	mn1=v[0].first;
+	mn2=v[0].second;
+	mx1=v[v.size()-1].first;
+	mx2=v[v.size()-1].second;
+	for(i=0;i<len*0.01;i++)
+	   {
+	       y2=(mx2-mn2);
+	       x2=(mx1-mn1);
+	       x1=x2*((float)rand()/RAND_MAX)+mn1;
+	       y1=y2*((float)rand()/RAND_MAX)+mn2;
+	       v2.push_back(std::make_pair(x1,y1));
+	   }
+	for(i=0;i<len;i++)
+	   v2.push_back(v[i]);
+	sort(v2.begin(),v2.end());     
+	/*for(i=0;i<14;i++)
+	   cout<<v2[i].first<<'\t'<<v2[i].second<<'\n';*/   
+    for(i=0;i<len;i++)
+       {
+           for(j=0;j<len;j++)
+              {
+                  mx=sqrt(pow(v[i].first-v[j].first,2)+pow(v[i].second-v[j].second,2));
+                  if(max<mx)
+                    max=mx;
+              }
+       }
+    s=max/2;
+    s1=3.14*s*s;
+    //cout<<s<<'\n';
+    z1=3.14*z*z;
+    for(i=0;i<len;i++)
+       {
+           for(j=i+1;j<len;j++)
+           {
+			   dis=sqrt(pow(v[i].first-v[j].first,2)+pow(v[i].second-v[j].second,2));
+			   if(z2<=dis<=z2+.005)
+		   {
+		   x3=(v[i].first+v[j].first)/2;
+		   y3=(v[i].second+v[j].second)/2;
+		   dis/=2;
+		   v6.push_back(make_pair(y3,dis));
+		   v1.push_back(make_pair(x3,v6.back()));
+		   z4=3.14*dis*dis;
+		   z1-=z4;
+		   B=(10*z1)/s1;
+		   for(k=0;k<len;k++)
+              if(dis<=sqrt(pow(x3-v[k].first,2)+pow(y3-v[k].second,2))<=z)
+                  a[i]++;
+           if(a[i]>B)          
+             LR2[i]=a[i]*log(a[i]/B)+(len-a[i])*log((len-a[i])/(len-B));
+           else
+             LR2[i]=0;
+		    if(isnan(LR2[i]))
+			  LR2[i]=0;
+		    n++;
+		   }
+		   }
+       }
+    for(i=0;i<n;i++)
+       {
+           v5.push_back(make_pair(LR[i],v1[i]));
+       }      
+    for(i=0;i<len*1.01;i++)
+       {
+           for(j=i+1;j<len*1.01;j++)
+		   {
+			   dis=sqrt(pow(v2[i].first-v2[j].first,2)+pow(v2[i].second-v2[j].second,2));
+			   if(z2<=dis<=z2+.005)
+		   {
+		   x3=(v2[i].first+v2[j].first)/2;
+		   y3=(v2[i].second+v2[j].second)/2;
+		   dis/=2;
+		   v4.push_back(make_pair(y3,dis));
+		   v3.push_back(make_pair(x3,v4.back()));
+		   z4=3.14*dis*dis;
+		   z1-=z4;
+		   B=(14*z1)/s1;
+			   for(k=0;k<len*1.01;k++)
+                if(dis<=sqrt(pow(x3-v2[k].first,2)+pow(y3-v2[k].second,2))<=z)
+                  b[i]++;
+           if(b[i]>B)          
+             LR2[i]=b[i]*log(b[i]/B)+(len*1.01-b[i])*log((len*1.01-b[i])/(len*1.01-B));
+           else
+             LR2[i]=0;
+		   if(isnan(LR2[i]))
+			  LR2[i]=0;  
+		 k++;
+		   }
+		   }
+       }   
+    
+    
+    for(i=0;i<k;i++)
+       {
+           v7.push_back(make_pair(LR2[i],v3[i]));
+       }   
+    sort(v5.begin(),v5.end());
+    reverse(v5.begin(),v5.end());
+    sort(v7.begin(),v7.end());
+    reverse(v7.begin(),v7.end());
+    
+    for(i=0;i<n;i++)
+       {
+           f1=0;
+           for(j=0;j<len;j++)
+              {
+                  f=sqrt(pow(v5[i].second.second.first-v[j].first,2)+pow(v5[i].second.second.second-v[j].second,2));
+                  if(v5[i].second.first<=f<=z)
+                  {
+                      if(flag[j]!=-1)
+                        {
+                            f1=1;
+							for(kp=0;kp<j;kp++)
+                               if(flag[kp]==i)
+                                 flag[kp]=-1;
+                            break;
+                        }
+                      else
+                        {
+                            flag[j]=i;
+                        }
+                  }
+              }
+           if(f1==0)
+              {
+                  hspt[kl++]=i;
+              }
+       }
+    int pos[kl];
+    for(i=0;i<kl;i++)
+		pos[i]=-1;
+       
+    for(i=0;i<k;i++)
+       {
+           f1=0;
+           for(j=0;j<len*1.01;j++)
+              //if(i!=j)
+              {
+                  f=sqrt(pow(v7[i].second.second.first-v2[j].first,2)+pow(v7[i].second.second.second-v2[j].second,2));
+                  if(v7[i].second.first<=f<=z)
+                  {
+                      if(flag1[j]!=-1)
+                        {
+                            f1=1;
+							for(kp=0;kp<j;kp++)
+                               if(flag1[kp]==i)
+                                 flag1[kp]=-1;
+                            break;
+                        }
+                      else
+                        {
+                            flag1[j]=i;
+                        }
+                  }
+              }
+       }
+    for(i=0;i<kl;i++)
+       {
+           //cout<<v1[hspt[i]].first<<endl;
+           for(j=0;j<len*1.01;j++)
+           if(v5[hspt[i]].first>=v7[j].first)
+             {
+                 pos[i]=j+1;
+                 break;
+             }
+          if(j==len*1.01&&pos[i]==-1)
+             pos[i]=j+1;
+       }
+	for(i=0;i<kl;i++)   
+		myfile<<v5[hspt[i]].second.first<<' '<<v5[hspt[i]].second.second.first<<' '<<v5[hspt[i]].second.second.second<<'\n';
+	/*myfile.close();
+   for(i=0;i<kl;i++)
+       {
+           cout<<hspt[i]<<" ";
+       }
+    cout<<'\n';
+    for(i=0;i<14;i++)
+       cout<<v3[i].first<<'\t'<<v3[i].second.first<<"\t"<<v3[i].second.second<<'\n';*/
+    /*for(i=0;i<kl;i++)
+       cout<<pos[i]/5.0<<'\n';*/
+   myfile.close();
+   myfile1.close();
+    return 0;
+}
